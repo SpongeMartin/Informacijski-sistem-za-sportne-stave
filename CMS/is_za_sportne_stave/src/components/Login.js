@@ -1,9 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import AuthContext from '../context/AuthProvider'
 import '../login.css'
+import axios from './api/axios'
 
 
 const Login = () => {
+    const { setAuth } = useContext(AuthContext)
     const [signing,setSigning] = useState("Sign-In")
     const userRef = useRef()
     const passRef = useRef()
@@ -26,8 +29,10 @@ const Login = () => {
 
     const [form,setForm] = useState(null)
 
-    const handleSubmit = async (e) =>{
+    const handleLogin = async (e) =>{
         e.preventDefault()
+        setUser('')
+        setPassword('')
     }
 
     useEffect(()=>{
@@ -39,7 +44,7 @@ const Login = () => {
                     <div className="fadeIn first">
                         <h2 style={{color:"black"}}>Please sign in!</h2>
                     </div>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleLogin}>
                         <input type="text" id="login" className="fadeIn second" ref={userRef}
                         name="login" placeholder="username" required onChange={(e) => setUser(e.target.value)} value={user}/>
                         <input type="password" id="password" className="fadeIn third" ref={passRef}
