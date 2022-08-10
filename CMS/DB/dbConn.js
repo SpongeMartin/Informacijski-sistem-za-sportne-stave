@@ -36,9 +36,45 @@ datapool.addUser=(user,pass,mail)=>{
     })
 }
 
+datapool.assignRole=(id)=>{
+    return new Promise((resolve,reject)=>{
+        conn.query(`INSERT INTO vloga (id) VALUES (?)`,[id], (err,res)=>{
+            if (err) {return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
+datapool.connectUsertoRole=(id)=>{
+    return new Promise((resolve,reject)=>{
+        conn.query(`INSERT INTO vloga_uporabnik (id, id_v, id_u) VALUES (?,?,?)`, [id,id,id],(err,res)=>{
+            if(err){return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
+datapool.searchAvailability=(user,mail)=>{
+    return new Promise((resolve,reject)=>{
+        conn.query(`SELECT * FROM uporabnik WHERE uporabnisko_ime = ? OR email = ?`,[user,mail],(err,res, fields)=>{
+            if(err){return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
 datapool.authorizeUser=(user,pass)=>{
     return new Promise ((resolve,reject)=>{
         conn.query('SELECT * FROM uporabnik WHERE uporabnisko_ime = ? AND geslo = ?', [user,pass], (err,res, fields)=>{
+            if(err){return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
+datapool.getRole=(id)=>{
+    return new Promise ((resolve,reject)=>{
+        conn.query('SELECT tip FROM vloga WHERE id = ?',[id],(err,res,fields)=>{
             if(err){return reject(err)}
             return resolve(res)
         })

@@ -8,24 +8,34 @@ import Greeting from './components/Greeting';
 import Login from './components/Login';
 import Profile from './components/Profile';
 import Bets from './components/Bets';
+import axios from "./api/axios";
 
 function App() {
-  //const location = useLocation()
+  const [username,setUsername] = useState(null)
+  const [role,setRole] = useState(null)
+  const [balance,setBalance] = useState(null)
+  const [virtualBalance,setVirtualBalance] = useState(null)
+
   return (
     <Router>
       <div>
         <Routes>
           <Route path="/" element={
             <>
-              <Greeting/>
+              <Greeting username={username}/>
               <Link to="/login"><div><h3>Login</h3></div></Link>
               <Nav/>
               <Bets/>
-              <Profile/>
+              <Profile username={username} role={role} balance={balance} virtualBalance={virtualBalance}/>
             </>
           }/>
           <Route path="/login" element={
-            <Login/>
+            <Login setUsername={setUsername} setRole={setRole} setBalance={setBalance} setVirtualBalance={setVirtualBalance}/>
+          }/>
+          <Route path="/news" element={
+            <>
+
+            </>
           }/>
         </Routes>
       </div>
