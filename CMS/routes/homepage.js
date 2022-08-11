@@ -2,14 +2,10 @@ const express = require("express")
 const homepage = express.Router();
 const DB = require('../DB/dbConn.js')
 
-//homepage.get('/',(req,res)=>{
-//    console.log("The route has been reached")
-//    res.send("homepage")
-//})
 
 homepage.get('/', async (req,res,next)=>{
     try{
-        var queryResult = await DB.allSports();
+        var queryResult = await DB.allBets();
         res.json(queryResult)
     }
     catch(err){

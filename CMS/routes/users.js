@@ -4,6 +4,7 @@ const session = require("express-session")
 const DB = require('../DB/dbConn.js')
 const bodyParser = require('body-parser');
 const { send } = require("process");
+
 var jsonParser = bodyParser.json()
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 

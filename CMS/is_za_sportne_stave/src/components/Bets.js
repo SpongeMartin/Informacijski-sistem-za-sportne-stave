@@ -1,12 +1,15 @@
 import React from 'react'
+import Bet from './Bet'
 
 const Bets = (props) => {
   return (
-    <div className='bets'>
-        <h2>{props.title}</h2>
-        <p>{props.text}</p>
-        <button className='betButton' onClick={props.bet}>Place bet</button>
-    </div>
+    <>
+      {props.betList?.map((bet) => (
+        <div key={bet.id}>
+          <Bet title={bet.naslov} date={bet.datum} sum={bet.znesek}/>
+        </div>
+      ))}
+    </>
   )
 }
 

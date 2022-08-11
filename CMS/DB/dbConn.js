@@ -18,7 +18,7 @@ var conn = mysql.createConnection({
       console.log('Connection established');
 })
 
-datapool.allSports=()=>{
+datapool.allBets=()=>{
     return new Promise ((resolve,reject)=>{
         conn.query(`SELECT * FROM stava`, (err,res)=>{
             if(err){return reject(err)}

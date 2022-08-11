@@ -2,6 +2,8 @@ const express = require('express')
 require('dotenv').config()
 const homepage = require('./routes/homepage')
 const users = require('./routes/users')
+const events = require('./routes/events')
+const bets = require('./routes/bets')
 const app = express()
 const port = 5055
 const mysql = require('mysql2')
@@ -29,6 +31,8 @@ app.use(session({
 
 app.use('/homepage',homepage)
 app.use("/users",users)
+app.use('/events',events)
+app.use('/bets',bets)
 
 app.get("/",(req,res)=>{
     res.send("zivjo")

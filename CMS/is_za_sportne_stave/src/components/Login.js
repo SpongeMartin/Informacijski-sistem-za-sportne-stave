@@ -7,7 +7,7 @@ import axios from '../api/axios'
 const LOGIN_URL = './users/login';
 const REGISTER_URL = './users/register';
 
-const Login = ({setUsername, setRole, setBalance, setVirtualBalance}) => {
+const Login = ({setUserId,setUsername, setRole, setBalance, setVirtualBalance}) => {
     const { setAuth } = useContext(AuthContext)
     const [signing,setSigning] = useState("Sign-In")
     const userRef = useRef()
@@ -44,11 +44,10 @@ const Login = ({setUsername, setRole, setBalance, setVirtualBalance}) => {
                 setUsername(response.data.user[0].uporabnisko_ime)
                 setBalance(response.data.user[0].denar)
                 setVirtualBalance(response.data.user[0].vdenar)
+                setRole(response.data.role[0].tip)
+                setUserId(response.data.user[0].id)
             });
-            
-            const accessToken = response?.data?.accessToken;
-            
-            setAuth({user,password,accessToken});
+            setAuth({user,password});
             setUser('')
             setPassword('')
             navigate("/")
