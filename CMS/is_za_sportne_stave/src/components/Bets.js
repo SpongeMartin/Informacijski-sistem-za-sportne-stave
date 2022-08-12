@@ -6,7 +6,7 @@ const Bets = (props) => {
     <>
       {props.betList?.map((bet) => (
         <div key={bet.id}>
-          <Bet title={bet.naslov} date={bet.datum} sum={bet.znesek}/>
+          <Bet title={bet.naslov} date={bet.datum} sum={bet.znesek} userId={props.userId} id={bet.id} creatorId={bet.u_id}/>
         </div>
       ))}
     </>

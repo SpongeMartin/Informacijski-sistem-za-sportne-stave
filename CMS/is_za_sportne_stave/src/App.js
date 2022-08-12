@@ -10,54 +10,54 @@ import Profile from './components/Profile';
 import Bets from './components/Bets';
 import axios from "./api/axios";
 import AddBets from './components/AddBets';
-const stream = new EventSource('http://88.200.63.148:5055/betStream',{withCredentials:true})
+
 const GET_BET_URL = './bets/retrieve'
 
 function App() {
-  const [username,setUsername] = useState(null)
-  const [userId,setUserId] = useState(null)
-  const [role,setRole] = useState(null)
-  const [balance,setBalance] = useState(null)
-  const [virtualBalance,setVirtualBalance] = useState(null)
+  const [user,setUser] = useState(null)
+  const [role,setRole] = useState("Not logged in")
   const [betList,setBetList] = useState(null)
-  const [posted,setPosted] = useState(null)
-
-
+  const [logged,setLogged] = useState(null)
 
   useEffect(()=>{
-    const fetchData = async() =>{
+    const stream = new EventSource('http://88.200.63.148:5055/bets/stream',{withCredentials:true})
+
+    stream.addEventListener('open', () => {
+      console.log('SSE opened!');
+    });
+  
+    stream.addEventListener('message', (e) => {
+      setBetList(JSON.parse(e.data));
+      console.log(betList)
+    });
+  
+    stream.addEventListener('error', (e) => {
+      console.error('Error: ',  e);
+    });
+  
+    return () => {
+      stream.close();
+    };
+  });
+
+  useEffect(()=>{
+        const fetchData = async() =>{
       try {
-        await axios.get(GET_BET_URL).then(
-          response=>{
-            setBetList(response.data)
+        await axios.get(GET_BET_URL).then(response=>{
+            if (betList) setBetList(betList + response.data)
+            else setBetList(response.data)
         });
       } catch (err) {
         console.log(err)
       }
     };
     fetchData();
+  },[])
 
-
-    stream.addEventListener('open', () => {
-      console.log('SSE opened!');
-    });
-  
-    stream.addEventListener('bet-post', (e) => {
-      console.log(e.data);
-      const data = JSON.parse(e.data);
-  
-      setBetList(data);
-    });
-  
-    stream.addEventListener('error', (e) => {
-      console.error('Error: ',  e);
-    });
-
-    return () => {
-      stream.close();
-    };
-  }, [posted]);
-
+  useEffect(()=>{
+    if(!user) setLogged(<Link to="/login"><div><h3>Login</h3></div></Link>)
+    else setLogged(<div onClick={()=>setUser(null)}><h3>Log out</h3></div>)
+  },[user])
 
   return (
     <Router>
@@ -65,16 +65,16 @@ function App() {
         <Routes>
           <Route path="/" element={
             <>
-              <Greeting username={username}/>
-              <Link to="/login"><div><h3>Login</h3></div></Link>
+              <Greeting username={user?.uporabnisko_ime}/>
+              {logged}
               <Nav/>
-              <Bets betList={betList}/>
-              <Profile username={username} role={role} balance={balance} virtualBalance={virtualBalance}/>
-              {username ? <AddBets id={userId} setPosted={setPosted} posted={posted}/> : <></>}
+              <Bets betList={betList} userId={user?.id}/>
+              <Profile username={user?.uporabnisko_ime} role={role} balance={user?.denar} virtualBalance={user?.vdenar}/>
+              {(role === "Moderator" || role === "Admin") ? <AddBets id={user.id}/> : <></>}
             </>
           }/>
           <Route path="/login" element={
-            <Login setUserId={setUserId} setUsername={setUsername} setRole={setRole} setBalance={setBalance} setVirtualBalance={setVirtualBalance}/>
+            <Login user={user} setUser={setUser} setRole={setRole} />
           }/>
           <Route path="/news" element={
             <>

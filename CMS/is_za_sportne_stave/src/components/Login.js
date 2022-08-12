@@ -7,28 +7,29 @@ import axios from '../api/axios'
 const LOGIN_URL = './users/login';
 const REGISTER_URL = './users/register';
 
-const Login = ({setUserId,setUsername, setRole, setBalance, setVirtualBalance}) => {
+const Login = ({user,setUser, setRole}) => {
     const { setAuth } = useContext(AuthContext)
     const [signing,setSigning] = useState("Sign-In")
     const userRef = useRef()
     const passRef = useRef()
     const errRef = useRef()
-    const [user,setUser] = useState("")
+    const [username,setUsername] = useState("")
     const [password,setPassword] = useState("")
     const [errMsg,setErrMsg] = useState("")
     const [email,setEmail] = useState("")
     let navigate = useNavigate();
 
     useEffect(()=>{
+        if(user) navigate("/")
         userRef.current?.focus();
     },[])
     useEffect(()=>{
         setErrMsg('');
-    },[user,password])
+    },[username,password])
     
     const changeSign = () => {
         signing === "Sign-In" ? setSigning("Sign-Up") : setSigning("Sign-In")
-        setUser("")
+        setUsername("")
         setPassword("")
     }
 
@@ -38,17 +39,14 @@ const Login = ({setUserId,setUsername, setRole, setBalance, setVirtualBalance}) 
         e.preventDefault()
         try {
             await axios.post(LOGIN_URL,
-                {username: user,password: password},
+                {username: username,password: password},
                 { headers: {'Content-Type': 'application/json'}, withCredentials:true }
             ).then(response=>{
-                setUsername(response.data.user[0].uporabnisko_ime)
-                setBalance(response.data.user[0].denar)
-                setVirtualBalance(response.data.user[0].vdenar)
+                setUser(response.data.user[0])
                 setRole(response.data.role[0].tip)
-                setUserId(response.data.user[0].id)
             });
-            setAuth({user,password});
-            setUser('')
+            setAuth({username,password});
+            setUsername('')
             setPassword('')
             navigate("/")
         } catch (err) {
@@ -68,13 +66,12 @@ const Login = ({setUserId,setUsername, setRole, setBalance, setVirtualBalance}) 
     const handleRegister = async (e) =>{
         e.preventDefault()
         try{
-            console.log(user+password+email)
             const response = await axios.post(REGISTER_URL,
-                {username: user, password: password, email: email},
+                {username: username, password: password, email: email},
                 {headers: {"Content-Type": "application/json"}, withCredentials:true }
             );
             console.log(JSON.stringify(response?.data));
-            setUser('')
+            setUsername('')
             setPassword('')
             setSigning("Sign-In")
         }catch(err){
@@ -100,7 +97,7 @@ const Login = ({setUserId,setUsername, setRole, setBalance, setVirtualBalance}) 
                     </div>
                     <form onSubmit={handleLogin}>
                         <input type="text" id="login" className="fadeIn second" ref={userRef}
-                        name="login" placeholder="username" required onChange={(e) => setUser(e.target.value)} value={user}/>
+                        name="login" placeholder="username" required onChange={(e) => setUsername(e.target.value)} value={username}/>
                         <input type="password" id="password" className="fadeIn third" ref={passRef}
                          name="login" placeholder="password" required onChange={(e) => setPassword(e.target.value)} value={password}/>
                         <input type="submit" className="fadeIn fourth" value="Log In"/>
@@ -120,15 +117,15 @@ const Login = ({setUserId,setUsername, setRole, setBalance, setVirtualBalance}) 
                     <form onSubmit={handleRegister}>
                         <input type="text" id="email" className='fadeIn second' name='login' placeholder='email' required value={email}
                         onChange={(e) => setEmail(e.target.value)}/>
-                        <input type="text" id="login" className="fadeIn second" name="login" placeholder="username" required value={user}
-                        onChange={(e) => setUser(e.target.value)}/>
+                        <input type="text" id="login" className="fadeIn second" name="login" placeholder="username" required value={username}
+                        onChange={(e) => setUsername(e.target.value)}/>
                         <input type="text" id="password" className="fadeIn third" name="login" placeholder="password" required
                         onChange={(e) => setPassword(e.target.value)} value={password}/>
                         <input type="submit" className="fadeIn first" value="Register"/>
                     </form>
                 </>)
         }
-    },[signing,user,password,email,errMsg])
+    },[signing,username,password,email,errMsg])
 
     return (
         <div className="wrapper fadeInDown">

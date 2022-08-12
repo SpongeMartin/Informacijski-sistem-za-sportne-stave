@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from '../api/axios'
-const POST_URL = './events/postBets'
+const POST_URL = './bets/post'
 
 const AddBets = ({id,setPosted,posted}) => {
     const [title,setTitle] = useState("")
@@ -8,13 +8,11 @@ const AddBets = ({id,setPosted,posted}) => {
     const postBet = async (e) => {
         e.preventDefault()
         try{
-            console.log(title+id)
             await axios.post(POST_URL,
                 {title:title, id:id},
                 {headers: {"Content-Type": "application/json"}, withCredentials:true }
             );
             setTitle('')
-            posted ? setPosted(false) : setPosted(true)
         }catch(err){
             console.log(err)
         }
