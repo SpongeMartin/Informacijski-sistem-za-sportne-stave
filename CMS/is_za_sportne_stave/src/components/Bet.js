@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../api/axios'
+import CommentSection from './CommentSection'
+import { ReactComponent as Megaphone } from '../assets/megaphone.svg';
 
-const REPORT_URL = "/bets/report"
-const BET_URL = "/bets/bet"
+const REPORT_URL = "/reports/report"
+const PLAY_URL = "/players/bet"
 const DELETE_URL = "/bets/delete"
 
-const Bet = ({id,title,date,sum,userId,creatorId}) => {
+const Bet = ({id,title,date,sum,vsum,userId,creatorId,commentList,username,balance,vbalance}) => {
     const [betAmount, setbetAmount] = useState('')
     const [vbetAmount, setvbetAmount] = useState('')
     const [betView, setbetView] = useState('betting')
@@ -25,23 +27,34 @@ const Bet = ({id,title,date,sum,userId,creatorId}) => {
 
     const handleSubmitBet = async (e) =>{
         e.preventDefault()
-        await axios.post(BET_URL,
-            {id:userId,betId:id,amount:betAmount,vamount:vbetAmount},
-            {headers: {'Content-Type': 'application/json'}, withCredentials:true }
-        );
-        setbetAmount('')
-        setvbetAmount('')
+        if (balance>=betAmount && vbalance>=vbetAmount) {
+            try{
+                await axios.post(PLAY_URL,
+                    {id:userId,betId:id,amount:betAmount,vamount:vbetAmount},
+                    {headers: {'Content-Type': 'application/json'}, withCredentials:true }
+                );
+                setbetAmount('')
+                setvbetAmount('')
+            }catch(err){
+                console.log(err)
+            }
+            
+        }
     }
     
     const handleSubmitReport = async (e) =>{
         e.preventDefault()
-        await axios.post(REPORT_URL,
-            {id:userId,details:reportText,betId:id,type:type},
-            {headers: {'Content-Type': 'application/json'}, withCredentials:true }
-        );
         setbetView("betting")
         setReportText("")
         setType("other")
+        try {
+            await axios.post(REPORT_URL,
+                {id:userId,details:reportText,betId:id,type:type},
+                {headers: {'Content-Type': 'application/json'}, withCredentials:true }
+            );
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const changeBetView = () =>{
@@ -50,28 +63,33 @@ const Bet = ({id,title,date,sum,userId,creatorId}) => {
     }
 
     const handleFinalize = async() =>{
-        await axios.post(DELETE_URL,
-            {id:id},
-            {headers: {'Content-Type':'application/json'}, withCredentials:true}
-        );
+        try {
+            await axios.post(DELETE_URL,
+                {id:id},
+                {headers: {'Content-Type':'application/json'}, withCredentials:true}
+            );
+        } catch (err) {
+            console.log(err)            
+        }
     }
 
     useEffect(()=>{
         if (betView === "betting") {
             setForm(
                 <div className='bet'>
-                    <h2>{title}</h2>
-                    <p>Begin: {date}</p>
-                    {(userId && !(creatorId===userId)) ? <button onClick={changeBetView}>Report!</button> : <></>}
-                    <p>Current total funds: {sum}</p>
-                    {userId ? <form onSubmit={handleSubmitBet}>
+                    <h2 className='betTitle'>{title}</h2>
+                    {(userId && !(creatorId===userId)) ? <div className='report-div align-right'><button onClick={changeBetView} style={{'margin':'0px'}}><svg className='svg'><Megaphone/></svg></button></div> : <></>}
+                    {creatorId===userId ? <button onClick={handleFinalize}>Finalize!</button> :  <></>}
+                    <span className='betText'>Begin: {date}</span>
+                    <span className='betText'>Current total funds: {sum} Current vfunds: {vsum}</span>
+                    {userId ? <form onSubmit={handleSubmitBet} autoComplete='off'>
                         <input type="number" id="betAmount"
                             name="betAmount" placeholder="Bet Amount" required onChange={(e) => betSum(e.target.value)} value={betAmount}/>
                         <input type="number" id="vbetAmount"
                             name="vbetAmount" placeholder="Virtual Bet Amount" required onChange={(e) => vbetSum(e.target.value)} value={vbetAmount}/>
-                        <input type="submit" value="Place bet"/>
+                        <div className='align-right'><input id="bet-button" type="submit" value="Place bet"/></div>
                     </form> : <></>}
-                    {creatorId===userId ? <button onClick={handleFinalize}>Finalize!</button> :  <></>}
+                    <CommentSection username={username} comments={commentList} userId={userId} betId={id} creatorId={id}/>
                 </div>
             );
         }else{
@@ -79,11 +97,11 @@ const Bet = ({id,title,date,sum,userId,creatorId}) => {
                 <div className='bet'>
                     <h2>{title}</h2>
                     <button onClick={changeBetView}>Back</button>
-                    <form onSubmit={handleSubmitReport}>
+                    <form onSubmit={handleSubmitReport} autoComplete='off'>
                         <input type="text" id="report" name='report' placeholder='Please provide information' 
                         required value={reportText} onChange={(e) => setReportText(e.target.value)}/>
                         <select onChange={(e) => setType(e.target.value)} name="reportType" id="reportType">
-                            <option value="drugo">Other</option>
+                            <option value="drugo" selected="selected">Other</option>
                             <option value="napacna_opredelitev">False evaluation</option>
                             <option value="ne_obstaja">Non-existent competition</option>
                             <option value="se_ni_zakljucila">Competition ended</option>
@@ -93,8 +111,7 @@ const Bet = ({id,title,date,sum,userId,creatorId}) => {
                 </div>
             );
         }
-    },[betView,reportText,betAmount,vbetAmount])
-
+    },[betView,reportText,betAmount,vbetAmount,type,sum,vsum])
 
   return (
     <>{form}</>

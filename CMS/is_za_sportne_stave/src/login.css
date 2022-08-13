@@ -3,7 +3,7 @@
 /* BASIC */
 
 html {
-  background-color: #56baed;
+  background-color: #384d63;
 }
 
 body {
@@ -82,7 +82,7 @@ h2.active {
 
 /* FORM TYPOGRAPHY*/
 
-input[type=button], input[type=submit], input[type=reset]  {
+button, input [type=number], input [type=button], input[type=submit], input[type=reset]  {
   background-color: #56baed;
   border: none;
   color: white;
@@ -104,11 +104,11 @@ input[type=button], input[type=submit], input[type=reset]  {
   transition: all 0.3s ease-in-out;
 }
 
-input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
+button:hover, input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
   background-color: #39ace7;
 }
 
-input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
+button:active, input[type="number"]:active, input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
   -moz-transform: scale(0.95);
   -webkit-transform: scale(0.95);
   -o-transform: scale(0.95);
@@ -116,7 +116,7 @@ input[type=button]:active, input[type=submit]:active, input[type=reset]:active  
   transform: scale(0.95);
 }
 
-input[type=text], input[type=password] {
+input[type="number"], input[type=text], input[type=password] {
   background-color: #f6f6f6;
   border: none;
   color: #0d0d0d;
@@ -137,7 +137,107 @@ input[type=text], input[type=password] {
   border-radius: 5px 5px 5px 5px;
 }
 
-input[type=text]:focus, input[type=password]:focus {
+input[type="number"] {
+  width:48%;
+  padding:10px 10px;
+  -moz-appearance: textfield;
+}
+
+.add-comment{
+  width:70%;
+}
+
+.report-div {
+  width: 50%;
+  display: inline-block
+}
+
+.svg{
+  height:15px;
+  width:15px
+}
+
+.betText{
+  text-align: left;
+  font-size: 16px;
+  font-weight: 520;
+  text-transform: uppercase;
+  display:block;
+  margin: 0px 0px 0px 15px;
+  color: aliceblue;
+}
+
+.betTitle{
+  width:45%;
+  text-align:left;
+  padding-left:4px;
+  font-size: 24px;
+}
+
+.align-right{
+  text-align: right;
+}
+
+.comment-section{
+  overflow: hidden;
+  height:200px;
+  background-color: #2a6a94;
+  border-radius: 20px;
+}
+
+.comment-info{
+  text-align: left;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display:inline-block;
+  margin: 0px 0px 0px 10px;
+  color: aliceblue;
+}
+
+.comment-content{
+  text-align: left;
+  font-size: 14px;
+  text-transform: uppercase;
+  display:block;
+  padding: 0px 0px 4px 15px;
+  margin:0px;
+  color: rgb(255, 255, 255);
+  font-family:'Arial';
+  border-bottom: solid 2px #0f293990
+}
+
+.user-details{
+  background-color: rgb(86, 86, 86);
+  border: solid 4px rgb(66, 66, 66);
+  margin-right: 15px;
+  display:inline-block;
+}
+
+.user-balance{
+  margin:7px;
+  color:#fff;
+}
+
+.edit-profile{
+  color:#fff;
+  background-color: rgb(66,66,66);
+  border: solid 4px rgb(66, 66, 66);
+  border-radius: 10px;
+  padding: 6px 10px;
+  display:inline-block;
+  margin-right:15px;
+}
+
+.edit-profile:hover{
+  background-color: rgb(88,88,88);
+}
+
+#bet-button{
+  margin:5px 14px 5px;
+}
+
+input[type="number"]:focus, input[type=text]:focus, input[type=password]:focus {
   background-color: #fff;
   border-bottom: 2px solid #5fbae9;
 }
@@ -145,6 +245,13 @@ input[type=text]:focus, input[type=password]:focus {
 input[type=text]:placeholder, input[type=password]:placeholder {
   color: #cccccc;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 
 
 
@@ -265,3 +372,4 @@ input[type=text]:placeholder, input[type=password]:placeholder {
 * {
   box-sizing: border-box;
 }
+

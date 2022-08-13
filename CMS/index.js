@@ -1,8 +1,10 @@
 const express = require('express')
 require('dotenv').config()
-const homepage = require('./routes/homepage')
 const users = require('./routes/users')
 const bets = require('./routes/bets')
+const comments = require('./routes/comments')
+const reports = require('./routes/reports')
+const players = require('./routes/players')
 const app = express()
 const port = 5055
 const mysql = require('mysql2')
@@ -28,9 +30,11 @@ app.use(session({
     cookie:{expires:60*2}
 }))
 
-app.use('/homepage',homepage)
 app.use("/users",users)
+app.use("/comments",comments)
 app.use('/bets',bets)
+app.use("/players",players)
+app.use("/reports",reports)
 
 app.get("/",(req,res)=>{
     res.send("zivjo")

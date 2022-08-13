@@ -1,12 +1,10 @@
 import React from 'react'
 import OngoingBets from './OngoingBets'
 
-const Profile = ({username,balance}) => {
+const Profile = ({balance,vbalance,points}) => {
   return (
-    <div>
-        <h3>{username}</h3>
-        <p>{balance}</p>
-        <OngoingBets/>
+    <div className='user-details'>
+        <p className='user-balance'>Tokens: {balance} V-Tokens: {vbalance} Points: {points}</p>
     </div>
   )
 }

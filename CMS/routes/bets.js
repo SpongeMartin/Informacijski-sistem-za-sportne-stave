@@ -15,44 +15,12 @@ bets.post("/delete", async (req,res)=>{
     }
 })
 
-bets.post("/bet", async (req,res)=>{
-    let userId = req.body.id
-    let amount = parseInt(req.body.amount)
-    let betId = req.body.betId
-    let vamount = parseInt(req.body.vamount)
-    if (userId && amount && betId && vamount) {
-        try {
-            let queryResult = await DB.getBetInfo(betId)
-            await DB.betOn(betId,userId,amount,vamount)
-            amount += parseInt(queryResult[0].znesek)
-            vamount += parseInt(queryResult[0].v_znesek)
-            await DB.updateBet(amount,vamount,betId)
-        } catch (err) {
-            res.sendStatus(500)
-        }
-    }
-})
-
-bets.post("/report", async (req,res)=>{
-    let userId = req.body.id
-    let details = req.body.details
-    let betId = req.body.betId
-    let type = req.body.type
-    if (userId && details && betId && type) {
-        try {
-            await DB.reportBet(userId,betId,details,type)
-        } catch (err) {
-            res.sendStatus(500)
-        }
-    }
-})
 
 bets.post("/post", async (req,res)=>{
     let userId = req.body.id
     let title = req.body.title
     try{
         let queryResult = await DB.addBet(userId,title)
-        await DB.connectUsertoBet(userId,queryResult.insertId)
     }catch(err){
         res.sendStatus(500)
     }

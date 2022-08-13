@@ -90,15 +90,6 @@ datapool.addBet=(user_id,betname)=>{
     })
 }
 
-datapool.connectUsertoBet=(user_id,bet_id)=>{
-    return new Promise ((resolve,reject)=>{
-        conn.query(`INSERT INTO stava_uporabnik (id_s,id_u,tip) VALUES (?,?,?)`,[bet_id,user_id,'Creator'],(err,res,fields)=>{
-            if(err){return reject(err)}
-            return resolve(res)
-        })
-    })
-}
-
 datapool.reportBet=(user_id,bet_id,details,type)=>{
     return new Promise ((resolve,reject)=>{
         conn.query(`INSERT INTO prijava (besedilo,tip,id_s,id_u) VALUES (?,?,?,?)`, [details,type,bet_id,user_id], (err,res,fields)=>{
@@ -108,9 +99,9 @@ datapool.reportBet=(user_id,bet_id,details,type)=>{
     })
 }
 
-datapool.betOn=(bet_id,user_id,amount,vamount)=>{
+datapool.addPlayers=(bet_id,user_id,amount,vamount)=>{
     return new Promise ((resolve,reject)=>{
-        conn.query(`INSERT INTO stava_uporabnik (id_s,id_u,znesek,v_znesek) VALUES (?,?,?,?)`, [bet_id,user_id,amount,vamount], (err,res,fields)=>{
+        conn.query(`INSERT INTO igralci (id_s,id_u,znesek,v_znesek) VALUES (?,?,?,?)`, [bet_id,user_id,amount,vamount], (err,res,fields)=>{
             if(err){return reject(err)}
             return resolve(res)
         })
@@ -119,7 +110,7 @@ datapool.betOn=(bet_id,user_id,amount,vamount)=>{
 
 datapool.updateBet=(amount,vamount,id)=>{
     return new Promise ((resolve,reject)=>{
-        conn.query(`UPDATE stava SET znesek = ? , v_znesek= ? WHERE id = ?`, [amount,vamount,id], (err,res,fields)=>{
+        conn.query(`UPDATE stava SET znesek = znesek + ? , v_znesek= v_znesek + ? WHERE id = ?`, [amount,vamount,id], (err,res,fields)=>{
             if(err){console.log(err)
                 return reject(err)}
             return resolve(res)
@@ -127,18 +118,46 @@ datapool.updateBet=(amount,vamount,id)=>{
     })
 }
 
-datapool.getBetInfo=(id)=>{
-    return new Promise ((resolve,reject)=>{
-        conn.query(`SELECT znesek,v_znesek FROM stava WHERE id = ?`,[id],(err,res)=>{
+
+datapool.deleteBet=(id)=>{
+    return new Promise((resolve,reject)=>{
+        conn.query(`DELETE FROM stava WHERE id = ?`, [id],(err,res)=>{
             if(err){return reject(err)}
             return resolve(res)
         })
     })
 }
 
-datapool.deleteBet=(id)=>{
+datapool.allComments=()=>{
     return new Promise((resolve,reject)=>{
-        conn.query(`DELETE FROM stava WHERE id = ?`, [id],(err,res)=>{
+        conn.query(`SELECT * FROM komentar`,(err,res)=>{
+            if(err){return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
+datapool.addComment=(user_id,bet_id,content,username)=>{
+    return new Promise ((resolve,reject)=>{
+        conn.query(`INSERT INTO komentar (besedilo, uporabnisko_ime, id_u, id_s) VALUES (?,?,?,?)`,[content,username,user_id,bet_id],(err,res)=>{
+            if(err){return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
+datapool.commentVote=(id,value)=>{
+    return new Promise((resolve,reject)=>{
+        conn.query(`UPDATE komentar SET tocke = tocke + ? WHERE id = ?`, [value,id],(err,res)=>{
+            if(err){return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
+datapool.updateUserBalance=(id,amount,vamount)=>{
+    return new Promise((resolve,reject)=>{
+        conn.query(`UPDATE uporabnik SET denar = denar - ?, vdenar = vdenar - ? WHERE id = ?`,[amount,vamount,id],(err,res)=>{
             if(err){return reject(err)}
             return resolve(res)
         })
