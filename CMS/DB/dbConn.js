@@ -81,9 +81,9 @@ datapool.getRole=(id)=>{
     })
 }
 
-datapool.addBet=(user_id,betname)=>{
+datapool.addBet=(user_id,betname,choices)=>{
     return new Promise ((resolve,reject)=>{
-        conn.query(`INSERT INTO stava (naslov,u_id) VALUES (?,?)`, [betname,user_id],(err,res,fields)=>{
+        conn.query(`INSERT INTO stava (naslov,u_id,izbire) VALUES (?,?,?)`, [betname,user_id,choices],(err,res,fields)=>{
             if(err){return reject(err)}
             return resolve(res)
         })
@@ -99,9 +99,9 @@ datapool.reportBet=(user_id,bet_id,details,type)=>{
     })
 }
 
-datapool.addPlayers=(bet_id,user_id,amount,vamount)=>{
+datapool.addPlayers=(bet_id,user_id,amount,vamount,choice)=>{
     return new Promise ((resolve,reject)=>{
-        conn.query(`INSERT INTO igralci (id_s,id_u,znesek,v_znesek) VALUES (?,?,?,?)`, [bet_id,user_id,amount,vamount], (err,res,fields)=>{
+        conn.query(`INSERT INTO stavni_listek (id_s,id_u,znesek,v_znesek,izbira) VALUES (?,?,?,?,?)`, [bet_id,user_id,amount,vamount,choice], (err,res,fields)=>{
             if(err){return reject(err)}
             return resolve(res)
         })
@@ -155,13 +155,41 @@ datapool.commentVote=(id,value)=>{
     })
 }
 
-datapool.updateUserBalance=(id,amount,vamount)=>{
+datapool.updateUserBalance=(id,amount,vamount,points = 0)=>{
     return new Promise((resolve,reject)=>{
-        conn.query(`UPDATE uporabnik SET denar = denar - ?, vdenar = vdenar - ? WHERE id = ?`,[amount,vamount,id],(err,res)=>{
+        conn.query(`UPDATE uporabnik SET denar = denar + ?, vdenar = vdenar + ?, tocke = tocke + ? WHERE id = ?`,[amount,vamount,points,id],(err,res)=>{
             if(err){return reject(err)}
             return resolve(res)
         })
     })
 }
+
+datapool.allWinners=(id,result)=>{
+    return new Promise((resolve,reject)=>{
+        conn.query(`SELECT * FROM stavni_listek WHERE id_s = ? AND izbira = ?`, [id,result],(err,res)=>{
+            if(err){return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
+datapool.prizeTokens=(id)=>{
+    return new Promise((resolve,reject)=>{
+        conn.query(`SELECT znesek,v_znesek FROM stava WHERE id = ?`,[id],(err,res)=>{
+            if(err){return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
+datapool.editUser=(username,password,id)=>{
+    return new Promise((resolve,reject)=>{
+        conn.query(`UPDATE uporabnik SET id = ?, uporabnisko_ime = ?, geslo = ?`,[id,username,password],(err,res)=>{
+            if(err){return reject(err)}
+            return resolve(res)
+        })
+    })
+}
+
 
 module.exports=datapool

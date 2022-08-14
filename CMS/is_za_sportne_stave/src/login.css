@@ -148,8 +148,9 @@ input[type="number"] {
 }
 
 .report-div {
-  width: 50%;
-  display: inline-block
+  margin-left: 20px;
+  display: inline-block;
+  text-align: right;
 }
 
 .svg{
@@ -168,7 +169,7 @@ input[type="number"] {
 }
 
 .betTitle{
-  width:45%;
+  display: contents;
   text-align:left;
   padding-left:4px;
   font-size: 24px;
@@ -179,7 +180,9 @@ input[type="number"] {
 }
 
 .comment-section{
-  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: scroll;
   height:200px;
   background-color: #2a6a94;
   border-radius: 20px;
@@ -250,6 +253,10 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.comment-section::-webkit-scrollbar {
+  display: none;
 }
 
 

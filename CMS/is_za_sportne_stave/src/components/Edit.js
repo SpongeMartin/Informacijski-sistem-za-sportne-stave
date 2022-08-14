@@ -1,25 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from '../api/axios'
 
-const Edit = () => {
+const EDIT_URL = "./users/edit"
+
+const Edit = ({id}) => {
+  const [username, setusername] = useState('')
+  const [password, setpassword] = useState('')
+
+  const handleChange = (e) =>{
+    e.preventDefault()
+    axios.post(EDIT_URL,{username:username,password:password,id:id},
+      { headers: {'Content-Type': 'application/json'}, withCredentials:true })
+  }
   return (
     <div className="wrapper fadeInDown">
       <div id="formContent">
-        <h2 className='active'> Sign In </h2>
-        <h2 className='inactive underlineHover'>Sign Up </h2>
+        <h2 className='active'>Your profile</h2>
         <div className="fadeIn first">
-          <h2 style={{color:"black"}}>Please sign in!</h2>
+          <h2 style={{color:"black"}}>Edit your credentials!</h2>
           <h2 style={{color:"red", width:"300px", marginTop:"10px"}}></h2>
         </div>
-        <form>
+        <form onSubmit={handleChange}>
           <input type="text" id="login" className="fadeIn second"
           name="login" placeholder="username" required/>
           <input type="password" id="password" className="fadeIn third"
           name="login" placeholder="password" required/>
-          <input type="submit" className="fadeIn fourth" value="Log In"/>
+          <input type="submit" className="fadeIn fourth" value="Change"/>
         </form>
-        <div id="formFooter">
-          <a className="underlineHover" href="#">Forgot Password?</a>
-        </div>
       </div>
     </div>
   )

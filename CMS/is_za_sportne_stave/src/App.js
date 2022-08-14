@@ -26,12 +26,12 @@ function App() {
     const betStream = new EventSource('http://88.200.63.148:5055/bets/stream',{withCredentials:true})
 
     betStream.addEventListener('open', () => {
-      console.log('SSE opened!');
+      //console.log('SSE opened!');
     });
   
     betStream.addEventListener('message', (e) => {
-      setBetList(JSON.parse(e.data));
-      console.log(betList)
+      let data = JSON.parse(e.data)
+      setBetList(data)
     });
   
     betStream.addEventListener('error', (e) => {
@@ -48,11 +48,10 @@ function App() {
       try {
         await axios.get(GET_BETS_URL).then(response=>{
             if (betList) setBetList(betList + response.data)
-            else setBetList(response.data)
-        });
-        await axios.get(GET_COMMENTS_URL).then(response=>{
-          if (commentList) setCommentList(commentList + response.data)
-          else setCommentList(response.data)
+            else{
+              setBetList(response.data)
+              console.log(response.data)
+            } 
         });
       } catch (err) {
         console.log(err)
@@ -77,7 +76,7 @@ function App() {
           <Route path="/" element={
             <>
               <Greeting username={user?.uporabnisko_ime} logged={logged} balance={user?.denar} vbalance={user?.vdenar} points={user?.tocke} />
-              <Bets role={role} betList={betList} username={user?.uporabnisko_ime} userId={user?.id} commentList={commentList} balance={user?.denar} vbalance={user?.vdenar}/>
+              <Bets role={role} betList={betList} username={user?.uporabnisko_ime} userId={user?.id} balance={user?.denar} vbalance={user?.vdenar}/>
               {(role === "Moderator" || role === "Admin") ? <AddBets id={user.id}/> : <></>}
             </>
           }/>
@@ -85,7 +84,7 @@ function App() {
             <Login user={user} setUser={setUser} setRole={setRole} />
           }/>
           <Route path="/profile" element={
-            <Edit/>
+            <Edit id={user?.id}/>
           }/>
           <Route path="/purchase" element={
             <TokenPurchase/>

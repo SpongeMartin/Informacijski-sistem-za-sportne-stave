@@ -7,7 +7,7 @@ const CommentSection = ({userId,betId,creatorId,comments,username}) => {
   useEffect(()=>{
     setData(
       <div className='comment-section'>
-            {comments?.map((comment) =>(
+            {comments?.reverse()?.map((comment) =>(
             <div key={comment?.id}>
                 <Comment content={comment?.besedilo} date={comment?.datum} userId={comment?.id_u} username={comment?.uporabnisko_ime}
                 betId={betId} creatorId={creatorId} points={comment?.tocke} commentId={comment?.id}/>
@@ -15,7 +15,7 @@ const CommentSection = ({userId,betId,creatorId,comments,username}) => {
             )}
         </div>
     )
-  },[])
+  },[comments,betId,userId,username])
   return (
     <>
       {data}

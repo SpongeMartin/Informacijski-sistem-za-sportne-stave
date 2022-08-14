@@ -9,6 +9,7 @@ var jsonParser = bodyParser.json()
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 
+
 users.get('/login',async(req,res,next)=>{
     console.log("Session: " + JSON.stringify(req.session))
     if(req.session.user) {
@@ -21,6 +22,19 @@ users.get('/login',async(req,res,next)=>{
     else{
         res.send({logged:false})
     }
+})
+
+users.post('/edit',async(req,res)=>{
+  let username = req.body.username
+  let password = req.body.username
+  let id = req.body.id
+  if(username && password && id){
+    try {
+        await DB.editUser(username,password,id)
+    } catch (err) {
+        res.sendStatus(500)
+    }
+  }  
 })
 
 
