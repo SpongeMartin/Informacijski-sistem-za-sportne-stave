@@ -19,14 +19,11 @@ function App() {
   const [user,setUser] = useState(null)
   const [role,setRole] = useState("Not logged in")
   const [betList,setBetList] = useState(null)
-  const [commentList,setCommentList] = useState(null)
-  const [logged,setLogged] = useState(null)
 
   useEffect(()=>{
     const betStream = new EventSource('http://88.200.63.148:5055/bets/stream',{withCredentials:true})
 
     betStream.addEventListener('open', () => {
-      //console.log('SSE opened!');
     });
   
     betStream.addEventListener('message', (e) => {
@@ -50,8 +47,9 @@ function App() {
             if (betList) setBetList(betList + response.data)
             else{
               setBetList(response.data)
-              console.log(response.data)
             } 
+        }).catch(err=>{
+          console.log(err)
         });
       } catch (err) {
         console.log(err)
@@ -60,14 +58,7 @@ function App() {
     fetchData();
   },[])
 
-  useEffect(()=>{
-    const setOffline = () =>{
-      setUser(null); 
-      setRole("Not logged in")
-    }
-    if(!user) setLogged(<Link to="/login"><h3 className='pure-menu-link align-right'>Login</h3></Link>)
-    else setLogged(<h3 className='pure-menu-link' style={{'display':'inline-block'}} onClick={setOffline}>Log out</h3>)
-  },[user])
+
 
   return (
     <Router>
@@ -75,9 +66,10 @@ function App() {
         <Routes>
           <Route path="/" element={
             <>
-              <Greeting username={user?.uporabnisko_ime} logged={logged} balance={user?.denar} vbalance={user?.vdenar} points={user?.tocke} />
-              <Bets role={role} betList={betList} username={user?.uporabnisko_ime} userId={user?.id} balance={user?.denar} vbalance={user?.vdenar}/>
+              <Greeting username={user?.uporabnisko_ime} setUser={setUser} setRole={setRole} logged={user} balance={user?.denar} vbalance={user?.vdenar} points={user?.tocke} />
               {(role === "Moderator" || role === "Admin") ? <AddBets id={user.id}/> : <></>}
+              <Bets role={role} betList={betList} username={user?.uporabnisko_ime} userId={user?.id} balance={user?.denar} vbalance={user?.vdenar}/>
+              
             </>
           }/>
           <Route path="/login" element={
@@ -87,7 +79,7 @@ function App() {
             <Edit id={user?.id}/>
           }/>
           <Route path="/purchase" element={
-            <TokenPurchase/>
+            <TokenPurchase id={user?.id}/>
           }/>
         </Routes>
       </div>

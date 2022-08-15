@@ -130,7 +130,7 @@ datapool.deleteBet=(id)=>{
 
 datapool.allComments=()=>{
     return new Promise((resolve,reject)=>{
-        conn.query(`SELECT * FROM komentar`,(err,res)=>{
+        conn.query(`SELECT * FROM komentar ORDER BY id`,(err,res)=>{
             if(err){return reject(err)}
             return resolve(res)
         })
@@ -155,7 +155,7 @@ datapool.commentVote=(id,value)=>{
     })
 }
 
-datapool.updateUserBalance=(id,amount,vamount,points = 0)=>{
+datapool.updateUserBalance=(id,amount = 0,vamount,points = 0)=>{
     return new Promise((resolve,reject)=>{
         conn.query(`UPDATE uporabnik SET denar = denar + ?, vdenar = vdenar + ?, tocke = tocke + ? WHERE id = ?`,[amount,vamount,points,id],(err,res)=>{
             if(err){return reject(err)}
@@ -184,7 +184,7 @@ datapool.prizeTokens=(id)=>{
 
 datapool.editUser=(username,password,id)=>{
     return new Promise((resolve,reject)=>{
-        conn.query(`UPDATE uporabnik SET id = ?, uporabnisko_ime = ?, geslo = ?`,[id,username,password],(err,res)=>{
+        conn.query(`UPDATE uporabnik SET uporabnisko_ime = ?, geslo = ? WHERE id = ?`,[username,password,id],(err,res)=>{
             if(err){return reject(err)}
             return resolve(res)
         })

@@ -82,7 +82,7 @@ h2.active {
 
 /* FORM TYPOGRAPHY*/
 
-button, input [type=number], input [type=button], input[type=submit], input[type=reset]  {
+button,input[type=email],input [type=text], input [type=number], input [type=button], input[type=submit], input[type=reset]  {
   background-color: #56baed;
   border: none;
   color: white;
@@ -108,7 +108,7 @@ button:hover, input[type=button]:hover, input[type=submit]:hover, input[type=res
   background-color: #39ace7;
 }
 
-button:active, input[type="number"]:active, input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
+input[type=email]:active, button:active, input[type="number"]:active, input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
   -moz-transform: scale(0.95);
   -webkit-transform: scale(0.95);
   -o-transform: scale(0.95);
@@ -116,7 +116,7 @@ button:active, input[type="number"]:active, input[type=button]:active, input[typ
   transform: scale(0.95);
 }
 
-input[type="number"], input[type=text], input[type=password] {
+input[type="number"],input[type=email], input[type=text], input[type=password] {
   background-color: #f6f6f6;
   border: none;
   color: #0d0d0d;
@@ -236,16 +236,43 @@ input[type="number"] {
   background-color: rgb(88,88,88);
 }
 
+.create-bet-text{
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display:inline-block;
+  margin: 40px 8px 10px 8px; 
+  color: #cccccc;
+}
+
+.create-bet-items{
+  font-size: 16px;
+  color: #cccccc;
+}
+
+.create-bet-button{
+  margin-bottom: 5px;
+}
+
+.create-bet-box{
+  display: -webkit-inline-box;
+  width: 48.5%;
+  margin-left: 20px;
+  border-radius: 20px;
+  background-color: #2a6a94;
+}
+
 #bet-button{
   margin:5px 14px 5px;
 }
 
-input[type="number"]:focus, input[type=text]:focus, input[type=password]:focus {
+input[type="number"]:focus, input[type=text]:focus,input[type=email]:focus, input[type=password]:focus {
   background-color: #fff;
   border-bottom: 2px solid #5fbae9;
 }
 
-input[type=text]:placeholder, input[type=password]:placeholder {
+input[type=email]:placeholder input[type=text]:placeholder, input[type=password]:placeholder {
   color: #cccccc;
 }
 

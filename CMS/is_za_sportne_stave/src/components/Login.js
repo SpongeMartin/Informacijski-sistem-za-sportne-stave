@@ -44,18 +44,20 @@ const Login = ({user,setUser, setRole}) => {
             ).then(response=>{
                 setUser(response.data.user[0])
                 setRole(response.data.role[0].tip)
+                setAuth({username,password});
+                setUsername('')
+                setPassword('')
+                navigate("/")
             });
-            setAuth({username,password});
-            setUsername('')
-            setPassword('')
-            navigate("/")
         } catch (err) {
+            console.log(err)
             if(!err?.response){
                 setErrMsg("No server response");
+                
             } else if(err.response?.status === 400){
                 setErrMsg("Missing username or password");
             } else if(err.response?.status === 401){
-                setErrMsg("Unauthorized");
+                setErrMsg("User does not exist");
             } else {
                 setErrMsg("Login failed");
             }
@@ -113,10 +115,11 @@ const Login = ({user,setUser, setRole}) => {
                     <h2 className='active'>Sign Up </h2>
                     <div className="fadeIn first">
                         <h2 style={{color:"black"}}>Please sign up!</h2>
+                        <h2 style={{color:"red", width:"300px", marginTop:"10px"}}> {errMsg} </h2>
                     </div>
                     <form onSubmit={handleRegister}>
-                        <input type="text" id="email" className='fadeIn second' name='login' placeholder='email' required value={email}
-                        onChange={(e) => setEmail(e.target.value)}/>
+                        <input type="email" id="email" className='fadeIn second' name='login' placeholder='email' required value={email}
+                        onChange={(e) => setEmail(e.target.value)} style={{'textTransform':'none', 'boxShadow':'0 30px 60px 0 rgb(0 0 0 / 0%)'}}/>
                         <input type="text" id="login" className="fadeIn second" name="login" placeholder="username" required value={username}
                         onChange={(e) => setUsername(e.target.value)}/>
                         <input type="text" id="password" className="fadeIn third" name="login" placeholder="password" required

@@ -11,7 +11,6 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 
 users.get('/login',async(req,res,next)=>{
-    console.log("Session: " + JSON.stringify(req.session))
     if(req.session.user) {
         res.send({
             logged:true,
@@ -21,6 +20,19 @@ users.get('/login',async(req,res,next)=>{
     }
     else{
         res.send({logged:false})
+    }
+})
+
+users.post('/purchase',async(req,res)=>{
+    let id = req.body.id
+    let tokens = req.body.tokens
+    let vtokens = req.body.vtokens
+    if (id && (tokens || vtokens)) {
+        try {
+            await DB.updateUserBalance(id,tokens,vtokens)
+        } catch (err) {
+            console.log(err)
+        }
     }
 })
 
@@ -52,9 +64,8 @@ users.post('/login',jsonParser, async (req,res)=>{
                     req.session.role = roleResult
                     req.session.save()
                     res.send(req.session)
-                    console.log("Valid session")
                 }else{
-                    console.log("Incorrect password")
+                    console.log("plz enter password")
                 }
             }else{
                 console.log("User not registred")
@@ -65,7 +76,6 @@ users.post('/login',jsonParser, async (req,res)=>{
             res.sendStatus(500)
         }
     }else{
-        console.log("Please enter Username and Password" + username)
         res.sendStatus(401)
     }
     res.end()
@@ -82,9 +92,6 @@ users.post('/register', jsonParser, async (req,res)=>{
                 queryResult = await DB.addUser(username,password,email)
                 await DB.assignRole(queryResult.insertId)
                 await DB.connectUsertoRole(queryResult.insertId)
-                if(queryResult.affectedRows){
-                    console.log("New user added!")
-                }
             }else{
                 res.sendStatus(406)
             }

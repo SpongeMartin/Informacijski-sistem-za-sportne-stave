@@ -89,12 +89,12 @@ const Bet = ({id,title,date,sum,vsum,userId,creatorId,commentList,username,balan
                     <h2 className='betTitle'>{title}</h2>
                     {(userId && !(creatorId===userId)) ? <div className='report-div align-right' style={{"float":"right"}}><button onClick={changeBetView} style={{'margin':'0px'}}><svg className='svg'><Megaphone/></svg></button></div> : <></>}
                     {creatorId===userId ? <>
-                        <h2 style={{"display":"inline-block"}}>Result: </h2>
-                        <select onChange={(e)=> setResult(e.target.value)}>
-                            <option selected="selected"></option>
+                        <h2 style={{"display":"inline-block","margin":"0px 10px 0px 10px"}}>Result: </h2>
+                        <select defaultValue="" onChange={(e)=> setResult(e.target.value)}>
+                            <option value="" selected="selected"></option>
                             {choices?.map((choice,index)=><option key={index} value={choice}>{choice}</option>)}
                         </select>
-                        <button onClick={handleFinalize}>Finalize!</button></> :  <></>}
+                        <div className='report-div align-right' style={{"float":"right"}}><button style={{"margin":"0px"}} onClick={handleFinalize}>Finalize!</button></div></> :  <></>}
                     <span className='betText'>Begin: {date}</span>
                     <span className='betText'>Current total funds: {sum} Current vfunds: {vsum}</span>
                     {userId ? <form onSubmit={handleSubmitBet} autoComplete='off'>
@@ -103,6 +103,7 @@ const Bet = ({id,title,date,sum,vsum,userId,creatorId,commentList,username,balan
                         <input type="number" id="vbetAmount"
                             name="vbetAmount" placeholder="Virtual Bet Amount" required onChange={(e) => vbetSum(e.target.value)} value={vbetAmount}/>
                         <div className='align-right'>
+                            <h2 style={{'margin':'0px 10px 0px 0px'}}>Your choice:</h2>
                             <select defaultValue="" onChange={(e) => setDecision(e.target.value)} style={{'marginRight':'100px'}}>
                                 <option value=""></option>
                                 {choices?.map((choice,index)=><option key={index} value={choice}>{choice}</option>)}
@@ -132,7 +133,7 @@ const Bet = ({id,title,date,sum,vsum,userId,creatorId,commentList,username,balan
                 </div>
             );
         }
-    },[betView,reportText,betAmount,vbetAmount,type,sum,vsum,choices,commentList])
+    },[betView,reportText,betAmount,vbetAmount,type,sum,vsum,choices,commentList,userId,decision])
 
   return (
     <>{form}</>

@@ -9,9 +9,10 @@ const AddBets = ({id,setPosted,posted}) => {
     
     const handlePostBet = async (e) => {
         e.preventDefault()
-        if (choices) {
+        if (choices.length>=2) {
             let choiceString = choices.toString()
             setChoices(null)
+            setTitle('')
             try{
                 await axios.post(POST_URL,
                     {title:title, id:id, choices:choiceString},
@@ -41,19 +42,19 @@ const AddBets = ({id,setPosted,posted}) => {
 
 
   return (
-    <div>
+    <div className='create-bet-box'>
         <form onSubmit={handlePostBet}>
-            <h3>Title: </h3>
+            <h3 className='create-bet-text'>Title: </h3>
             <input type="text" id="title" name="title" placeholder="title" required
             onChange={(e) => setTitle(e.target.value)} value={title}/>
-            <h3>Choices: </h3>
-            <ul>
-                {choices?.map((item)=><li>{item}</li>)}
+            <h3 className='create-bet-text' style={{'marginTop':'10px'}}>Choices: </h3>
+            <ul style={{'margin':'0px 0px'}}>
+                {choices?.map((item,index)=><li key={index} className='create-bet-items'>{item}</li>)}
             </ul>
-            <input type="text" id="addChoice" name="addChoice" placeholder="Add a Choice"
-            onChange={(e) => setAddChoices(e.target.value)} value={addChoices}/>
-            <button type="button" onClick={newChoice}>Add choice</button>
-            <input type="submit" value="Post"/>
+            <input type="text" id="addChoice" name="addChoice" placeholder="Add a Choice" style={{'width':'60%'}}
+            onChange={(e) => setAddChoices(e.target.value)} value={addChoices} autoComplete="off"/>
+            <button className='create-bet-button' type="button" onClick={newChoice}>Add choice</button>
+            <div style={{'textAlign':'center'}}><input className='create-bet-button' type="submit" value="Post"/></div>
         </form>
 
     </div>
